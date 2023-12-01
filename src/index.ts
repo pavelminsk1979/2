@@ -1,7 +1,11 @@
 import express,{Request,Response} from 'express'
+import bodyParser from "body-parser";
 const app = express()
 const port = 3010
 
+
+const parserMideleware= bodyParser({})
+app.use (parserMideleware)
 
 const products = [{id:'1',title:'tomato'},{id:'2',title:'orange'}]
 const  addresses=[{id:'1',value:'Nezalejnasti 12'},{id:'2',value:'Surganovo 51'}]
@@ -37,9 +41,20 @@ app.get('/addresses/:id', (req:Request, res:Response) => {
 })
 
 app.delete('/products/:id',(req:Request, res:Response) =>{
-    let idProduct = req.params.id
-    let product = products.filter(e=> e.id!==idProduct)
-    res.send(204)
+    for(let i=0;i<products.length;i++){
+       if(products[i].id=== req.params.id){
+           products.splice(i,1)
+           res.send(204)
+           return
+       }
+    } res.send(404)
+})
+
+app.post('/products', (req:Request, res:Response) => {
+const newProduct = {id:String(+(new Date())),title:req.body.title}
+    products.push(newProduct)
+res.status(201).send(newProduct)
+
 })
 
 app.listen(port, () => {
