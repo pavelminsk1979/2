@@ -57,6 +57,15 @@ res.status(201).send(newProduct)
 
 })
 
+app.put('/products/:id', (req:Request, res:Response) => {
+    let oneProduct = products.find(e=>e.id===req.params.id)
+    if(oneProduct){
+        oneProduct.title=req.body.title
+        res.send(oneProduct)
+    }else {res.send(404)}
+
+})
+
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`)
 })
